@@ -21,7 +21,13 @@ VIDEO_OPTIONS="-c:v copy -coder 1 -pix_fmt yuv420p -g 30 -bf 0"
 
 if [[ "$2" == "no_audio" ]]; then
         echo "NO_AUDIO: audio disabled on RTMP Stream."
-        AUDIO_OPTIONS="-an"
+        if [[ "$1" == "youtube" ]]; then
+        # mute YT by inserting an empty audio track, since it doesn't take the -an arg well.
+                AUDIO_OPTIONS_YT_MUTE="-f lavfi -i anullsrc"
+                AUDIO_OPTIONS=""
+        else
+                AUDIO_OPTIONS="-an"
+        fi
 fi
 
 if [[ "$1" == "youtube" ]]; then
@@ -53,7 +59,7 @@ sync;echo 3 > /proc/sys/vm/drop_caches
 
 echo "LOG FILE: $RTMP_LOG"
 
-$FFMPEG_BINARY \
+$FFMPEG_BINARY $AUDIO_OPTIONS_YT_MUTE \
 -rtsp_transport udp -y \
 -i "$VIDEO_SOURCE" \
 $VIDEO_OPTIONS $AUDIO_OPTIONS -aspect 16:9 -f flv "$STREAM_PROVIDER/$KEY" > $RTMP_LOG 2>&1 &
