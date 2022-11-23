@@ -10,7 +10,8 @@ fi
 
 FFMPEG_BINARY="/opt/wz_mini/bin/ffmpeg"
 
-TWITCH_URL="rtmp://live-ber.twitch.tv/app"
+# Update this with the best ingest server suggested in https://stream.twitch.tv/ingests/ for camera location
+TWITCH_URL="rtmp://lax.contribute.live-video.net/app"
 YOUTUBE_URL="rtmp://b.rtmp.youtube.com/live2"
 FACEBOOK_URL="rtmps://live-api-s.facebook.com:443/rtmp"
 
@@ -59,7 +60,10 @@ sync;echo 3 > /proc/sys/vm/drop_caches
 
 echo "LOG FILE: $RTMP_LOG"
 
-$FFMPEG_BINARY $AUDIO_OPTIONS_YT_MUTE \
--rtsp_transport udp -y \
+$FFMPEG_BINARY \
+$AUDIO_OPTIONS_YT_MUTE \
+-rtsp_transport udp \
+-use_wallclock_as_timestamps 1 \
+-y \
 -i "$VIDEO_SOURCE" \
 $VIDEO_OPTIONS $AUDIO_OPTIONS -aspect 16:9 -f flv "$STREAM_PROVIDER/$KEY" > $RTMP_LOG 2>&1 &
