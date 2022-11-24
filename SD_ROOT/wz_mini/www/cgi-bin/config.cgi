@@ -182,7 +182,8 @@ echo -ne "<h1>$title</h1>";
 if [ "$updated" = true ];
 then
    echo '<div class="message_DIV">configuration file updated. <a href="?action=reboot">Reboot<a/> to use changes. Or <a href="#revert">Revert</a> to a prior configuration</div>';
-
+else
+  echo '<div class="message_DIV"><a href="?action=reboot">Reboot Camera</a></div>';
 fi
 
 html_cam_feed
